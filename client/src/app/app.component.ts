@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { findReadVarNames } from '@angular/compiler/src/output/output_ast';
 import { Component, OnInit } from '@angular/core'
+import { User } from './_models/user';
+import { AccountService } from './_services/account.service';
 
 @Component({
   selector: 'app-root',
@@ -9,16 +11,21 @@ import { Component, OnInit } from '@angular/core'
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit{
-  title = 'Test';
+  title = 'Chat app';
   users: any;
 
-constructor(private http: HttpClient) {}
+constructor(private accountService: AccountService) {}
 
   ngOnInit() {
-    this.http.get('https://localhost:5001/api/users').subscribe(
-      response => {this.users = response;}, 
-      error => {console.log(error);}
-    )
+
+    this.setCurrentUser();
   }
+
+  setCurrentUser(){
+    const user: User = JSON.parse(localStorage.getItem('user'));
+    this.accountService.setCurrentUser(user);
+  }
+
+
 
 }
